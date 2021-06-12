@@ -10,38 +10,38 @@ It only uses D's brilliant meta programming capabilities to (de)serialise data f
 
 Tested with the following compilers:
 
-	* LDC2 1.26.0 (DMD v2.096.1, LLVM 11.0.1)
-	* DMD64 D Compiler v2.097.0
+* LDC2 1.26.0 (DMD v2.096.1, LLVM 11.0.1)
+* DMD64 D Compiler v2.097.0
 	
-	LDC2 takes a bit longer to compile than DMD, but produces much faster code.
+LDC2 takes a bit longer to compile than DMD, but produces much faster code.
 
 # What works, what doesn't?
 
 ## Works
 
-	* all structure based types should be ok
-	* static arrays
-	* dynamic arrays
-	* associative arrays
-	* all basic D types
-	* enum (only integers at the moment)
-	* nested structures
-	* as long as new fields are appended to the end, old programs can read new message formats and vice versa
-	* oneof (types in a oneof message must be unique)
+* all structure based types should be ok
+* static arrays
+* dynamic arrays
+* associative arrays
+* all basic D types
+* enum (only integers at the moment)
+* nested structures
+* as long as new fields are appended to the end, old programs can read new message formats and vice versa
+* oneof (types in a oneof message must be unique)
 
 ## Doesn't work (yet)
 
-	* endianess
-	* "any" (this should be easy to simulate using a ubyte[] member for the data and maybe a type / url / uuid field)
-	* adding/removing fields at arbitrary places (though adding new fields to the end is fine)
-	* D classes, unions (probably won't do)
-	* CI/CD
+* endianess
+* "any" (this should be easy to simulate using a ubyte[] member for the data and maybe a type / url / uuid field)
+* adding/removing fields at arbitrary places (though adding new fields to the end is fine)
+* D classes, unions (probably won't do)
+* CI/CD
 
 # Possible future improvements
 
-	* fixing stuff that doesn't work yet if sensible
-	* adding @attributes to D message structures and fields to specify e.g. field/version numbers
-	* adding a JSON encoding like e.g. proto3 does (see: https://developers.google.com/protocol-buffers/docs/proto3#json)
+* fixing stuff that doesn't work yet if sensible
+* adding @attributes to D message structures and fields to specify e.g. field/version numbers
+* adding a JSON encoding like e.g. proto3 does (see: https://developers.google.com/protocol-buffers/docs/proto3#json)
 
 # Some Microbenchmarks, take with a grain of salt.
 
