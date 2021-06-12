@@ -1,0 +1,3 @@
+import msgbuf;
+
+void main() { }

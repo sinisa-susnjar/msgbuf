@@ -1,0 +1,24 @@
+namespace PerfTest;
+
+enum MsgType:byte {
+	MSG_TYPE_TEST = 0,
+	MSG_TYPE_LIVE = 1
+}
+
+table Header {
+	version:uint32;
+	flag:bool;
+	name:string;
+	type:MsgType;
+}
+
+table FlatTestMsg {
+	header:Header;
+	doubleData:[double];
+	intData:[uint32];
+	bytesData:[ubyte];
+	// No map support in flatbuffers
+	// map<string, uint64> mapData = 5;
+}
+
+root_type FlatTestMsg;

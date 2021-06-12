@@ -1,0 +1,10 @@
+{
+	"authors": [ "Sinisa Susnjar" ],
+	"copyright": "Copyright © 2021, Sinisa Susnjar",
+	"description": "Sample application for the D msgbuf library.",
+	"license": "MIT",
+	"name": "mbuf",
+	"dependencies": {
+		"msgbuf": { "version": "~master", "path": "../../" }
+	}
+}

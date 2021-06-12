@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+option optimize_for = SPEED;
+
+message sub1 {
+	string greeting = 1;
+	uint32 answer = 2;
+}
+
+message sub2 {
+	uint32 answer = 1;
+}
+
+message sub3 {
+	double temp = 1;
+}
+
+message ProtoTestMsg {
+	enum MsgType {
+		MSG_TYPE_TEST = 0;
+		MSG_TYPE_LIVE = 1;
+	}
+	message Header {
+		uint32 version = 1;
+		bool flag = 2;
+		string name = 3;
+		MsgType type = 4;
+	}
+	Header header = 1;
+	repeated double doubleData = 2;
+	repeated uint32 intData = 3;
+	bytes bytesData = 4;
+	// map<string, uint64> mapData = 5;
+	oneof msg {
+		uint64 ulongMsg = 5;
+		sub1 sub1Msg = 6;
+		sub2 sub2Msg = 7;
+		sub3 sub3Msg = 8;
+		uint32 uintMsg = 9;
+		string stringMsg = 10;
+		double doubleMsg = 11;
+	}
+}

@@ -1,0 +1,26 @@
+{
+	"authors": [ "Sinisa Susnjar" ],
+	"copyright": "Copyright © 2021, Sinisa Susnjar",
+	"description": "Protobuf-like data (de)serialisation using D meta programming.",
+	"license": "MIT",
+	"name": "msgbuf",
+	"configurations": [
+		{
+			"name": "lib",
+			"excludedSourceFiles": ["source/test.d"],
+			"targetType": "staticLibrary",
+			"targetPath": "lib"
+		},
+		{
+			"name": "shared",
+			"excludedSourceFiles": ["source/test.d"],
+			"targetType": "dynamicLibrary",
+			"targetPath": "lib"
+		},
+		{
+			"name": "msgbuf-test-lib",
+			"mainSourceFile": "source/test.d",
+			"targetType": "executable"
+		}
+	]
+}

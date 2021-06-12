@@ -1,0 +1,16 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/msgbuf
+msgbuf.so
+msgbuf.dylib
+msgbuf.dll
+msgbuf.a
+msgbuf.lib
+msgbuf-test-*
+*.exe
+*.o
+*.obj
+*.lst
+lib

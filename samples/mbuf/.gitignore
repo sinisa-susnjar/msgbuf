@@ -1,0 +1,15 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/mbuf
+mbuf.so
+mbuf.dylib
+mbuf.dll
+mbuf.a
+mbuf.lib
+mbuf-test-*
+*.exe
+*.o
+*.obj
+*.lst
