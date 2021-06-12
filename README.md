@@ -47,23 +47,23 @@ LDC2 takes a bit longer to compile than DMD, but produces much faster code.
 
 ## Using Flat msgbuf (i.e. similar to Google Flatbuffers)
 
-serialized size: 130072 (Flat)
-performed 1000 rounds in 39 ms (3335179 bytes / ms)
+	serialized size: 130072 (Flat)
+	performed 1000 rounds in 39 ms (3335179 bytes / ms)
 
 ## Using Variable msgbuf (i.e. similar to Google Protobuf)
 
-serialized size: 109919 (Var)
-performed 1000 rounds in 76 ms (1446302 bytes / ms)
+	serialized size: 109919 (Var)
+	performed 1000 rounds in 76 ms (1446302 bytes / ms)
 
 ## Google Protobuf
 
-serialized size: 109921
-performed 1000 rounds in 96 ms (1145010 bytes / ms)
+	serialized size: 109921
+	performed 1000 rounds in 96 ms (1145010 bytes / ms)
 
 ## Google Flatbuffers (note: these figures need to be verified!)
 
-serialized size: 130096
-performed 1000 ops in 107 ms (7650790 bytes / ms)
+	serialized size: 130096
+	performed 1000 ops in 107 ms (7650790 bytes / ms)
 
 I have never worked with flatbuffers before, so I welcome all
 constructive criticism.
