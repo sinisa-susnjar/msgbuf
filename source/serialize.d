@@ -7,15 +7,13 @@ import leb128, common, oneof;
 
 /// Serialize top-level, either array, associative array or struct.
 /// For aggregate types like structs, serialize each member.
-auto toMsgBuffer(MsgBufferType E = MsgBufferType.Flat, T)(const ref T val) {
-	return _toMsgBuffer!(E, T)(val, new OutBuffer);
+auto toMsgBuffer(MsgBufferType E = MsgBufferType.Var, T)(const ref T val) {
+	return toMsgBuffer!(E, T)(val, new OutBuffer);
 }	// toMsgBuffer()
 
-private:
-
 // Serialise a number as integer value.
-pragma(inline, true)
-static void serializeInt(MsgBufferType E, T)(const T val, OutBuffer buf) {
+// pragma(inline, true)
+void serializeInt(MsgBufferType E = MsgBufferType.Var, T)(const T val, OutBuffer buf) {
 	static if (E == MsgBufferType.Flat) {
 		buf.alignSize(T.alignof);
 		buf.write(to!T(val));
@@ -26,7 +24,7 @@ static void serializeInt(MsgBufferType E, T)(const T val, OutBuffer buf) {
 
 // Serialize a single value, either a string, a floating point value or a scalar, e.g.
 // int, bool, long, etc. If it is neither, then forward to top-level serialize.
-static auto serializeValue(MsgBufferType E, T)(const ref T val, OutBuffer buf) {
+auto serializeValue(MsgBufferType E = MsgBufferType.Var, T, C = int)(const ref T val, OutBuffer buf, void delegate(const ref C val, OutBuffer buf) cb = null ) {
 	static if (isSomeString!(T)) {
 		serializeInt!(E)(to!uint(val.length), buf);
 		buf.write(val);
@@ -69,7 +67,9 @@ static auto serializeValue(MsgBufferType E, T)(const ref T val, OutBuffer buf) {
 	} else static if (isAssociativeArray!(T)) {
 		// TODO: the performance for AAs is underwhelming, maybe there is a way to make "forbidden"
 		// optimisations, given the implementation details of AAs here:
-		// https://github.com/dlang/dmd/blob/7f4620f4e1fe29641b28648c5c4c93d9fafdf90f/src/dmd/backend/aarray.d
+		// https://github.com/dlang/dmd/blob/7f4620f4e1fe29641b28648c5c4c93d9fafdf90f/src/dmd/backend/aarray.d (dmd)
+		// or
+		// https://github.com/ldc-developers/ldc/blob/196a9eb9ad6374c0837588588f36715a3cf8e302/dmd/root/aav.d (ldc2)
 		// However, this might not work for all compilers, so maybe there is another way I have not seen yet...
 		serializeInt!(E)(to!uint(val.length), buf);
 		foreach (k; val.keys) {
@@ -97,11 +97,11 @@ static auto serializeValue(MsgBufferType E, T)(const ref T val, OutBuffer buf) {
 			serializeInt!(E)(to!ubyte(0), buf);
 		}
 	} else {
-		_toMsgBuffer!(E, T)(val, buf);
+		toMsgBuffer!(E, T)(val, buf);
 	}
 }	// serializeValue()
 
-static auto _toMsgBuffer(MsgBufferType E, T)(const ref T val, OutBuffer buf) {
+auto toMsgBuffer(MsgBufferType E = MsgBufferType.Var, T)(const ref T val, OutBuffer buf) {
 	static if (isAggregateType!(T) && !is(T == class)) {
 		static foreach (v; T.tupleof)
 			serializeValue!(E, typeof(v))(mixin("val." ~ __traits(identifier, v)), buf);
@@ -111,4 +111,4 @@ static auto _toMsgBuffer(MsgBufferType E, T)(const ref T val, OutBuffer buf) {
 		static assert(0, "expected struct or array, not " ~ T.stringof);
 	}
 	return buf;
-}	// _toMsgBuffer()
+}	// toMsgBuffer()

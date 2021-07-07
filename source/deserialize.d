@@ -8,24 +8,22 @@ import leb128, common;
 /// Deserialize top-level, either array, associative array or struct from
 /// a given ubyte array.
 /// For aggregate types like structs, deserialize each member.
-auto fromMsgBuffer(T, MsgBufferType E = MsgBufferType.Flat)(const ubyte[] msg) {
+auto fromMsgBuffer(T, MsgBufferType E = MsgBufferType.Var)(const ubyte[] msg) {
 	size_t processed = 0;
-	return _fromMsgBuffer!(T, E)(msg, processed);
+	return fromMsgBuffer!(T, E)(msg, processed);
 }	// fromMsgBuffer()
 
 /// Deserialize top-level, either array, associative array or struct from
 /// a given OutBuffer.
 /// For aggregate types like structs, deserialize each member.
-auto fromMsgBuffer(T, MsgBufferType E = MsgBufferType.Flat)(const OutBuffer buf) {
+auto fromMsgBuffer(T, MsgBufferType E = MsgBufferType.Var)(const OutBuffer buf) {
 	size_t processed = 0;
-	return _fromMsgBuffer!(T, E)(buf.toBytes, processed);
+	return fromMsgBuffer!(T, E)(buf.toBytes, processed);
 }	// fromMsgBuffer()
-
-private:
 
 // Deserialise a number from an integer value.
 pragma(inline, true)
-static const(T) deserializeInt(MsgBufferType E, T)(const ubyte[] msg, ref size_t processed) {
+const(T) deserializeInt(MsgBufferType E, T)(const ubyte[] msg, ref size_t processed) {
 	static if (E == MsgBufferType.Flat) {
 		// See: https://github.com/KabukiStarship/KabukiToolkit/wiki/Fastest-Method-to-Align-Pointers
 		processed += (-processed) & (T.alignof - 1);
@@ -39,7 +37,7 @@ static const(T) deserializeInt(MsgBufferType E, T)(const ubyte[] msg, ref size_t
 
 // Deserialize a single value, either a string, a floating point value or a scalar, e.g.
 // int, bool, long, etc. If it is neither, then forward to top-level deserialize.
-static auto deserializeValue(T, MsgBufferType E)(const ubyte[] msg, ref size_t processed) {
+auto deserializeValue(T, MsgBufferType E)(const ubyte[] msg, ref size_t processed) {
 	if (processed >= msg.length) {
 		// check for out of data, e.g. when trying to read a newer message format with more
 		// fields from data that has been serialised using an older message format version
@@ -88,7 +86,7 @@ static auto deserializeValue(T, MsgBufferType E)(const ubyte[] msg, ref size_t p
 				arrayFromLEB128!T(msg, processed, val);
 			} else {
 				processed += (-processed) & (T.alignof - 1);
-				import core.stdc.string;
+				import core.stdc.string : memcpy;
 				memcpy(&val[0], &msg[processed], val.length * typeof(val[0]).sizeof);
 				// I think memcpy() is faster than the below code, but I might be wrong...
 				// val[0..n][] = (cast(const(typeof(val[0]))*)&msg[processed])[0..n];
@@ -123,11 +121,11 @@ static auto deserializeValue(T, MsgBufferType E)(const ubyte[] msg, ref size_t p
 		}
 		return val;
 	} else {
-		return _fromMsgBuffer!(T, E)(msg, processed);
+		return fromMsgBuffer!(T, E)(msg, processed);
 	}
 }	// deserializeValue()
 
-static auto _fromMsgBuffer(T, MsgBufferType E)(const ubyte[] msg, ref size_t processed) {
+auto fromMsgBuffer(T, MsgBufferType E)(const ubyte[] msg, ref size_t processed) {
 	T val;
 	static if (isAggregateType!(T) && !is(T == class)) {
 		static foreach (v; T.tupleof)
@@ -138,4 +136,4 @@ static auto _fromMsgBuffer(T, MsgBufferType E)(const ubyte[] msg, ref size_t pro
 		static assert(0, "expected struct or array, not " ~ T.stringof);
 	}
 	return val;
-}	// _fromMsgBuffer()
+}	// fromMsgBuffer()
