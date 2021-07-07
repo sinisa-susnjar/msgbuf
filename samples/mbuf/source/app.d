@@ -58,7 +58,7 @@ void main(string[] args)
 
 	auto buf = toMsgBuffer!(Type)(msg);
 	writefln("serialized size: %s (%s)", buf.toBytes.length, Type.stringof);
-	const msg2 = fromMsgBuffer!(MsgBufTestMsg, Type)(buf);
+	auto msg2 = fromMsgBuffer!(MsgBufTestMsg, Type)(buf);
 	assert(msg == msg2);
 
 	auto sz = 0u;
