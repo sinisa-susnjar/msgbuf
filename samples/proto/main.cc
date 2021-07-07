@@ -16,15 +16,17 @@ main(int argc, const char **argv)
 	if (argc == 2)
 		rounds = std::stoi(argv[1]);
 
-	msg.mutable_header()->set_version(42);
-	msg.mutable_header()->set_flag(true);
-	msg.mutable_header()->set_name("Hello World!");
-	msg.mutable_header()->set_type(ProtoTestMsg::MSG_TYPE_TEST);
+	auto &hdr = *msg.mutable_header();
+	hdr.set_version(42);
+	hdr.set_flag(true);
+	hdr.set_name("Hello World!");
+	hdr.set_type(ProtoTestMsg::MSG_TYPE_TEST);
+	// auto &mapData = *msg.mutable_mapdata();
 	for (auto n = 0; n < 10000; n++) {
 		msg.add_doubledata(n);
 		msg.add_intdata(n);
 		// Flatbuffers does not support maps
-		// (*msg.mutable_mapdata())[std::to_string(n)] = n;
+		// mapData[std::to_string(n)] = n;
 	}
 	std::array<char, 10000> data;
 	std::fill(data.begin(), data.end(), 42);

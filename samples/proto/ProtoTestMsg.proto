@@ -32,12 +32,12 @@ message ProtoTestMsg {
 	bytes bytesData = 4;
 	// map<string, uint64> mapData = 5;
 	oneof msg {
-		uint64 ulongMsg = 5;
-		sub1 sub1Msg = 6;
-		sub2 sub2Msg = 7;
-		sub3 sub3Msg = 8;
-		uint32 uintMsg = 9;
-		string stringMsg = 10;
-		double doubleMsg = 11;
+		uint64 ulongMsg = 6;
+		sub1 sub1Msg = 7;
+		sub2 sub2Msg = 8;
+		sub3 sub3Msg = 9;
+		uint32 uintMsg = 10;
+		string stringMsg = 11;
+		double doubleMsg = 12;
 	}
 }
