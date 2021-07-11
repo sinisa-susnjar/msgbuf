@@ -5,7 +5,7 @@ module oneof;
 /// This has probably a fair share of TODOs, e.g. it cannot hold
 /// multiple instances of the same type, the opEqual() is most
 /// likely sub-optimal, and probably a bunch of other things that
-/// I don't see as a D newbie - yet :)
+/// I don't see as a D newbie.
 struct Oneof(Types...) {
 
 	/// Mixin some required operations like assignment, copy constructor, value getter.
@@ -54,8 +54,10 @@ private:
 		}
 	}
 
+	/// Types this Oneof instance can hold.
 	union { Types _data; }
 
+	/// Specific type this Oneof instance currently holds.
 	TypeInfo _type;
 }
 

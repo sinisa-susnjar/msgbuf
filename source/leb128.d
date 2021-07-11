@@ -1,10 +1,9 @@
+/// Little Endian Base - see https://en.wikipedia.org/wiki/LEB128
 module leb128;
 
 import std.conv, std.traits, std.outbuffer;
 
-/// Little Endian Base - see https://en.wikipedia.org/wiki/LEB128
-
-/// Decode LEB128 value encoded in buf.
+/// Decode LEB128 value encoded in `buf`.
 const(T) fromLEB128(T)(const ubyte[] buf, ref size_t processed) {
 	static if (isScalarType!T && !isFloatingPoint!T) {
 		T result;
@@ -27,7 +26,7 @@ const(T) fromLEB128(T)(const ubyte[] buf, ref size_t processed) {
 	}
 }	// fromLEB()
 
-/// Decode LEB128 value encoded in buf into array val.
+/// Decode LEB128 value encoded in `buf` into array `val`.
 void arrayFromLEB128(T)(const ubyte[] buf, ref size_t processed, ref T val) {
 	static if (isArray!T && !isFloatingPoint!(T[0])) {
 		size_t n = processed;
@@ -52,7 +51,7 @@ void arrayFromLEB128(T)(const ubyte[] buf, ref size_t processed, ref T val) {
 	}
 }	// arrayFromLEB()
 
-/// Encode value in T val into given buf.
+/// Encode value `val_` of type `T` into given `buf`.
 void toLEB128(T)(OutBuffer buf, const T _val) {
 	static if (isScalarType!T && !isFloatingPoint!T) {
 		bool more = true;

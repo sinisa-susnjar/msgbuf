@@ -1,4 +1,4 @@
-/// Serialize a D struct, class or array to a message buffer.
+/// Serialize a D type a message buffer.
 module serialize;
 
 import std.conv, std.traits, std.outbuffer, std.string;
@@ -7,12 +7,13 @@ import leb128, common, oneof;
 
 /// Serialize top-level, either array, associative array or struct.
 /// For aggregate types like structs, serialize each member.
+/// Return: serialized data as `OutBuffer`
 auto toMsgBuffer(MsgBufferType E = MsgBufferType.Var, T)(const ref T val) {
 	return toMsgBuffer!(E, T)(val, new OutBuffer);
 }	// toMsgBuffer()
 
-// Serialise a number as integer value.
-// pragma(inline, true)
+/// Serialise an integer to `buf`.
+pragma(inline, true)
 void serializeInt(MsgBufferType E = MsgBufferType.Var, T)(const T val, OutBuffer buf) {
 	static if (E == MsgBufferType.Flat) {
 		buf.alignSize(T.alignof);
@@ -22,8 +23,8 @@ void serializeInt(MsgBufferType E = MsgBufferType.Var, T)(const T val, OutBuffer
 	}
 }	// serializeInt()
 
-// Serialize a single value, either a string, a floating point value or a scalar, e.g.
-// int, bool, long, etc. If it is neither, then forward to top-level serialize.
+/// Serialize a single value, either a string, a floating point value or a scalar, e.g.
+/// int, bool, long, etc. If it is neither, then forward to top-level serialize.
 auto serializeValue(MsgBufferType E = MsgBufferType.Var, T, C = int)(const ref T val, OutBuffer buf, void delegate(const ref C val, OutBuffer buf) cb = null ) {
 	static if (isSomeString!(T)) {
 		serializeInt!(E)(to!uint(val.length), buf);
@@ -101,6 +102,9 @@ auto serializeValue(MsgBufferType E = MsgBufferType.Var, T, C = int)(const ref T
 	}
 }	// serializeValue()
 
+/// Serialize top-level, either array, associative array or struct.
+/// For aggregate types like structs, serialize each member.
+/// Return: serialized data as `OutBuffer`
 auto toMsgBuffer(MsgBufferType E = MsgBufferType.Var, T)(const ref T val, OutBuffer buf) {
 	static if (isAggregateType!(T) && !is(T == class)) {
 		static foreach (v; T.tupleof)

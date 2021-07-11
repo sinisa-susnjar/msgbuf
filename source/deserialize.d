@@ -1,4 +1,4 @@
-/// Deserialize a message buffer into a D struct, class or array.
+/// Deserialize a message buffer into a D type.
 module deserialize;
 
 import std.conv, std.traits, std.string, std.outbuffer;
@@ -8,6 +8,8 @@ import leb128, common;
 /// Deserialize top-level, either array, associative array or struct from
 /// a given ubyte array.
 /// For aggregate types like structs, deserialize each member.
+/// Params: msg = serialized data ubyte array
+/// Return: Variable of type `T`.
 auto fromMsgBuffer(T, MsgBufferType E = MsgBufferType.Var)(const ubyte[] msg) {
 	size_t processed = 0;
 	return fromMsgBuffer!(T, E)(msg, processed);
@@ -16,12 +18,14 @@ auto fromMsgBuffer(T, MsgBufferType E = MsgBufferType.Var)(const ubyte[] msg) {
 /// Deserialize top-level, either array, associative array or struct from
 /// a given OutBuffer.
 /// For aggregate types like structs, deserialize each member.
+/// Params: buf = serialized data OutBuffer
+/// Return: Variable of type `T`.
 auto fromMsgBuffer(T, MsgBufferType E = MsgBufferType.Var)(const OutBuffer buf) {
 	size_t processed = 0;
 	return fromMsgBuffer!(T, E)(buf.toBytes, processed);
 }	// fromMsgBuffer()
 
-// Deserialise a number from an integer value.
+/// Deserialize an integer value from the given `msg`.
 pragma(inline, true)
 const(T) deserializeInt(MsgBufferType E, T)(const ubyte[] msg, ref size_t processed) {
 	static if (E == MsgBufferType.Flat) {
@@ -35,8 +39,8 @@ const(T) deserializeInt(MsgBufferType E, T)(const ubyte[] msg, ref size_t proces
 	return n;
 }	// deserializeInt()
 
-// Deserialize a single value, either a string, a floating point value or a scalar, e.g.
-// int, bool, long, etc. If it is neither, then forward to top-level deserialize.
+/// Deserialize a single value, either a string, a floating point value or a scalar, e.g.
+/// int, bool, long, etc. If it is neither, then forward to top-level deserialize.
 auto deserializeValue(T, MsgBufferType E)(const ubyte[] msg, ref size_t processed) {
 	if (processed >= msg.length) {
 		// check for out of data, e.g. when trying to read a newer message format with more
@@ -125,6 +129,10 @@ auto deserializeValue(T, MsgBufferType E)(const ubyte[] msg, ref size_t processe
 	}
 }	// deserializeValue()
 
+/// Deserialize top-level, either array, associative array or struct from
+/// a given ubyte array.
+/// For aggregate types like structs, deserialize each member.
+/// Return: Variable of type `T`.
 auto fromMsgBuffer(T, MsgBufferType E)(const ubyte[] msg, ref size_t processed) {
 	T val;
 	static if (isAggregateType!(T) && !is(T == class)) {
