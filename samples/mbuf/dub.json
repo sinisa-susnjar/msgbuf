@@ -5,6 +5,6 @@
 	"license": "MIT",
 	"name": "mbuf",
 	"dependencies": {
-		"msgbuf": { "version": "~master", "path": "../../" }
+		"msgbuf": { "path": "../../" }
 	}
 }
