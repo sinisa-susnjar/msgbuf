@@ -2,7 +2,7 @@
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
 # documentation.
-name: D
+name: build
 
 on:
   push:
@@ -26,4 +26,6 @@ jobs:
         # Build and run tests, as defined by `unittest` configuration
         # In this mode, `mainSourceFile` is excluded and `version (unittest)` are included
         # See https://dub.pm/package-format-json.html#configurations
-        dub test --compiler=$DC
+        dub test -b unittest-cov --compiler=$DC
+        # Upload code coverage
+        bash <(curl -s https://codecov.io/bash) -t 4a1740cc-4ff5-4f8f-84ba-1b88c5fa0814

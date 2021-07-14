@@ -1,3 +1,5 @@
+[![build](https://github.com/sinisa-susnjar/msgbuf/actions/workflows/d.yml/badge.svg)](https://github.com/sinisa-susnjar/msgbuf/actions) [![coverage](https://codecov.io/gh/sinisa-susnjar/msgbuf/branch/main/graph/badge.svg?token=1C9K09MWJ5)](https://codecov.io/gh/sinisa-susnjar/msgbuf)
+
 # D Message Buffers
 
 I was pondering the use of either protobuf or flatbuffers for a private project of mine, and there are some good D modules out there that enable the use of those serialisation libraries from within D programs.
