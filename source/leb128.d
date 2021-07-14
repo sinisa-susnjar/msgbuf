@@ -51,7 +51,7 @@ void arrayFromLEB128(T)(const ubyte[] buf, ref size_t processed, ref T val) {
 	}
 }	// arrayFromLEB()
 
-/// Encode value `val_` of type `T` into given `buf`.
+/// Encode value `_val` of type `T` into given `buf`.
 void toLEB128(T)(OutBuffer buf, const T _val) {
 	static if (isScalarType!T && !isFloatingPoint!T) {
 		bool more = true;

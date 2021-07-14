@@ -1,4 +1,4 @@
-/// Serialize a D type a message buffer.
+/// Serialize a D type to a message buffer.
 module serialize;
 
 import std.conv, std.traits, std.outbuffer, std.string;
