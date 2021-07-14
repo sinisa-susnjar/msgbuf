@@ -28,4 +28,4 @@ jobs:
         # See https://dub.pm/package-format-json.html#configurations
         dub test -b unittest-cov --compiler=$DC
         # Upload code coverage
-        bash <(curl -s https://codecov.io/bash) -t 4a1740cc-4ff5-4f8f-84ba-1b88c5fa0814
+        bash <(curl -s https://codecov.io/bash)
