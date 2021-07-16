@@ -8,14 +8,12 @@
 		{
 			"name": "lib",
 			"excludedSourceFiles": ["source/test.d"],
-			"targetType": "staticLibrary",
-			"targetPath": "lib"
+			"targetType": "staticLibrary"
 		},
 		{
 			"name": "shared",
 			"excludedSourceFiles": ["source/test.d"],
-			"targetType": "dynamicLibrary",
-			"targetPath": "lib"
+			"targetType": "dynamicLibrary"
 		},
 		{
 			"name": "msgbuf-test-lib",

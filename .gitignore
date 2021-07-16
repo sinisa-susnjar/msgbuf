@@ -13,4 +13,4 @@ msgbuf-test-*
 *.o
 *.obj
 *.lst
-lib
+libmsgbuf.*
