@@ -7,18 +7,11 @@
 	"configurations": [
 		{
 			"name": "lib",
-			"excludedSourceFiles": ["source/test.d"],
 			"targetType": "staticLibrary"
 		},
 		{
 			"name": "shared",
-			"excludedSourceFiles": ["source/test.d"],
 			"targetType": "dynamicLibrary"
-		},
-		{
-			"name": "msgbuf-test-lib",
-			"mainSourceFile": "source/test.d",
-			"targetType": "executable"
 		}
 	]
 }
