@@ -21,7 +21,7 @@ LDC2 takes a bit longer to compile than DMD, but produces much faster code.
 
 ## Works
 
-* all structure based types should be ok
+* most structure based types should be ok (as long as the members are public)
 * static arrays
 * dynamic arrays
 * associative arrays
