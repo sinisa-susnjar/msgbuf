@@ -25,8 +25,17 @@ void serializeInt(MsgBufferType E = MsgBufferType.Var, T)(const T val, OutBuffer
 
 /// Serialize a single value, either a string, a floating point value or a scalar, e.g.
 /// int, bool, long, etc. If it is neither, then forward to top-level serialize.
-auto serializeValue(MsgBufferType E = MsgBufferType.Var, T, C = int)(const ref T val, OutBuffer buf, void delegate(const ref C val, OutBuffer buf) cb = null ) {
-	static if (isSomeString!(T)) {
+/// Used to serialize rvalues, where no ref is possible.
+auto serializeValue(MsgBufferType E = MsgBufferType.Var, T)(const T val, OutBuffer buf) {
+	return serializeValue!(E, T)(val, buf);
+}
+
+/// Serialize a single value, either a string, a floating point value or a scalar, e.g.
+/// int, bool, long, etc. If it is neither, then forward to top-level serialize.
+auto serializeValue(MsgBufferType E = MsgBufferType.Var, T)(const ref T val, OutBuffer buf) {
+	static if (__traits(hasMember, T, "toMsgBuf")) {
+		val.toMsgBuf!E(buf);
+	} else static if (isSomeString!(T)) {
 		serializeInt!(E)(to!uint(val.length), buf);
 		buf.write(val);
 	} else static if (isBoolean!(T)) {
@@ -82,9 +91,7 @@ auto serializeValue(MsgBufferType E = MsgBufferType.Var, T, C = int)(const ref T
 		static foreach (idx, s; T.tupleof) {{
 			alias OneofMemberType = typeof(s);
 			enum OneofMemberName = __traits(identifier, s);
-
 			static if (OneofMemberName.startsWith("___data_field")) {
-
 				if (has!(OneofMemberType)(val)) {
 					immutable oneOfValue = get!(OneofMemberType)(val);
 					serializeInt!(E)(to!ubyte(idx+1), buf);
@@ -106,9 +113,13 @@ auto serializeValue(MsgBufferType E = MsgBufferType.Var, T, C = int)(const ref T
 /// For aggregate types like structs, serialize each member.
 /// Return: serialized data as `OutBuffer`
 auto toMsgBuffer(MsgBufferType E = MsgBufferType.Var, T)(const ref T val, OutBuffer buf) {
-	static if (isAggregateType!(T) && !is(T == class)) {
-		static foreach (v; T.tupleof)
-			serializeValue!(E, typeof(v))(mixin("val." ~ __traits(identifier, v)), buf);
+	static if (__traits(hasMember, T, "toMsgBuf")) {
+		val.toMsgBuf!E(buf);
+	} else static if (isAggregateType!(T) && !is(T == class)) {
+		static foreach (v; T.tupleof) {
+			static if (__traits(identifier, v) != "this") // ignore "alias this"
+				serializeValue!(E, typeof(v))(mixin("val." ~ __traits(identifier, v)), buf);
+		}
 	} else static if (isArray!(T) || isAssociativeArray!(T)) {
 		serializeValue!(E, T)(val, buf);
 	} else {

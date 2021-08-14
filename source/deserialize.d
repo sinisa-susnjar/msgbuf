@@ -12,7 +12,18 @@ import leb128, common;
 /// Return: Variable of type `T`.
 auto fromMsgBuffer(T, MsgBufferType E = MsgBufferType.Var)(const ubyte[] msg) {
 	size_t processed = 0;
-	return fromMsgBuffer!(T, E)(msg, processed);
+	T val;
+	return fromMsgBuffer!(T, E)(val, msg, processed);
+}	// fromMsgBuffer()
+
+/// Deserialize top-level, either array, associative array or struct from
+/// a given ubyte array.
+/// For aggregate types like structs, deserialize each member.
+/// Params: msg = serialized data ubyte array
+/// Return: Variable of type `T` as return value and in `val`.
+auto fromMsgBuffer(T, MsgBufferType E = MsgBufferType.Var)(ref T val, const ubyte[] msg) {
+	size_t processed = 0;
+	return fromMsgBuffer!(T, E)(val, msg, processed);
 }	// fromMsgBuffer()
 
 /// Deserialize top-level, either array, associative array or struct from
@@ -22,7 +33,18 @@ auto fromMsgBuffer(T, MsgBufferType E = MsgBufferType.Var)(const ubyte[] msg) {
 /// Return: Variable of type `T`.
 auto fromMsgBuffer(T, MsgBufferType E = MsgBufferType.Var)(const OutBuffer buf) {
 	size_t processed = 0;
-	return fromMsgBuffer!(T, E)(buf.toBytes, processed);
+	T val;
+	return fromMsgBuffer!(T, E)(val, buf.toBytes, processed);
+}	// fromMsgBuffer()
+
+/// Deserialize top-level, either array, associative array or struct from
+/// a given OutBuffer.
+/// For aggregate types like structs, deserialize each member.
+/// Params: buf = serialized data OutBuffer
+/// Return: Variable of type `T` ad return value and in `val`.
+auto fromMsgBuffer(T, MsgBufferType E = MsgBufferType.Var)(ref T val, const OutBuffer buf) {
+	size_t processed = 0;
+	return fromMsgBuffer!(T, E)(val, buf.toBytes, processed);
 }	// fromMsgBuffer()
 
 /// Deserialize an integer value from the given `msg`.
@@ -42,46 +64,62 @@ const(T) deserializeInt(MsgBufferType E, T)(const ubyte[] msg, ref size_t proces
 /// Deserialize a single value, either a string, a floating point value or a scalar, e.g.
 /// int, bool, long, etc. If it is neither, then forward to top-level deserialize.
 auto deserializeValue(T, MsgBufferType E)(const ubyte[] msg, ref size_t processed) {
+	T val;
+	return deserializeValue!(T, E)(val, msg, processed);
+}
+
+/// Deserialize a single value, either a string, a floating point value or a scalar, e.g.
+/// int, bool, long, etc. If it is neither, then forward to top-level deserialize.
+/// Return type `T` as return value and in `val`.
+auto deserializeValue(T, MsgBufferType E)(ref T val, const ubyte[] msg, ref size_t processed) {
 	if (processed >= msg.length) {
 		// check for out of data, e.g. when trying to read a newer message format with more
 		// fields from data that has been serialised using an older message format version
-		T val;
+		// T val;
 		return val;
 	}
-	static if (isSomeString!(T)) {
+	static if (__traits(hasMember, T, "fromMsgBuf")) {
+		val.fromMsgBuf!E(msg, processed);
+		return val;
+	} else static if (isSomeString!(T)) {
 		immutable n = deserializeInt!(E, uint)(msg, processed);
 		immutable s = processed;
 		processed += n;
-		return to!T(msg[s..processed].assumeUTF);
+		val = to!T(msg[s..processed].assumeUTF);
+		return val;
 	} else static if (isBoolean!(T)) {
 		immutable n = processed;
 		processed += T.sizeof;
 		static assert(ubyte.sizeof == bool.sizeof);
-		return *cast(T *)&msg[n];
+		val = *cast(T *)&msg[n];
+		return val;
 	} else static if (is(T == enum)) {
 		static if (__traits(compiles, to!int(EnumMembers!T[0]))) {
 			static if (E == MsgBufferType.Flat) {
 				processed += (-processed) & (int.alignof - 1);
 				immutable n = processed;
 				processed += int.sizeof;
-				return *cast(T *)&msg[n];
+				val = *cast(T *)&msg[n];
+				return val;
 			} else {
-				return to!T(fromLEB128!int(msg, processed));
+				val = to!T(fromLEB128!int(msg, processed));
+				return val;
 			}
 		} else {
 			static assert(0, "only integral enums supported for enum " ~ T.stringof);
 		}
 	} else static if (isScalarType!(T) || isFloatingPoint!(T)) {
 		static if (!isFloatingPoint!(T) && T.sizeof > 1 && E == MsgBufferType.Var) {
-			return fromLEB128!T(msg, processed);
+			val = fromLEB128!T(msg, processed);
+			return val;
 		} else {
 			processed += (-processed) & (T.alignof - 1);
 			immutable n = processed;
 			processed += T.sizeof;
-			return *cast(T *)&msg[n];
+			val = *cast(T *)&msg[n];
+			return val;
 		}
 	} else static if (isArray!(T)) {
-		T val;
 		auto n = deserializeInt!(E, uint)(msg, processed);
 		static if (isDynamicArray!(T))
 			val = new typeof(val[0])[n];
@@ -102,7 +140,6 @@ auto deserializeValue(T, MsgBufferType E)(const ubyte[] msg, ref size_t processe
 		}
 		return val;
 	} else static if (isAssociativeArray!(T)) {
-		T val;
 		immutable n = deserializeInt!(E, uint)(msg, processed);
 		foreach (i; 0..n) {
 			auto k = deserializeValue!(KeyType!T, E)(msg, processed);
@@ -110,7 +147,6 @@ auto deserializeValue(T, MsgBufferType E)(const ubyte[] msg, ref size_t processe
 		}
 		return val;
 	} else static if (is(T == struct) && T.stringof.startsWith("Oneof")) {
-		T val;
 		immutable oneOfIdx = deserializeInt!(E, ubyte)(msg, processed);
 		if (oneOfIdx > 0) {
 			static foreach (idx, s; T.tupleof) {{
@@ -125,21 +161,24 @@ auto deserializeValue(T, MsgBufferType E)(const ubyte[] msg, ref size_t processe
 		}
 		return val;
 	} else {
-		return fromMsgBuffer!(T, E)(msg, processed);
+		return fromMsgBuffer!(T, E)(val, msg, processed);
 	}
 }	// deserializeValue()
 
 /// Deserialize top-level, either array, associative array or struct from
 /// a given ubyte array.
 /// For aggregate types like structs, deserialize each member.
-/// Return: Variable of type `T`.
-auto fromMsgBuffer(T, MsgBufferType E)(const ubyte[] msg, ref size_t processed) {
-	T val;
-	static if (isAggregateType!(T) && !is(T == class)) {
+/// Return: Variable of type `T` as return value and in `val`.
+auto fromMsgBuffer(T, MsgBufferType E)(ref T val, const ubyte[] msg, ref size_t processed) {
+	static if (__traits(hasMember, T, "fromMsgBuf")) {
+		val.fromMsgBuf!E(msg, processed);
+	} else static if (isAggregateType!(T) && !is(T == class)) {
 		static foreach (v; T.tupleof)
-			mixin("val." ~ __traits(identifier, v)) = deserializeValue!(typeof(v), E)(msg, processed);
+			static if (__traits(identifier, v) != "this") // skip over "alias this"
+				mixin("val." ~ __traits(identifier, v)) =
+					deserializeValue!(typeof(v), E)(mixin("val." ~ __traits(identifier, v)), msg, processed);
 	} else static if (isArray!(T) || isAssociativeArray!(T)) {
-		val = deserializeValue!(T, E)(msg, processed);
+		val = deserializeValue!(T, E)(val, msg, processed);
 	} else {
 		static assert(0, "expected struct or array, not " ~ T.stringof);
 	}
