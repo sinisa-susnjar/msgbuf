@@ -12,9 +12,9 @@ It only uses D's brilliant meta programming capabilities to (de)serialise data f
 
 Tested with the following compilers:
 
-* LDC2 1.26.0 (DMD v2.096.1, LLVM 11.0.1)
-* DMD64 D Compiler v2.097.0
-	
+* LDC2 1.26.0 (DMD v2.096.1, LLVM 11.0.1), 1.27.0 (DMD v2.097.1, LLVM 12.0.1)
+* DMD64 D Compiler v2.097.0, v2.097.2-beta.1
+
 LDC2 takes a bit longer to compile than DMD, but produces much faster code.
 
 # What works, what doesn't?
@@ -22,6 +22,7 @@ LDC2 takes a bit longer to compile than DMD, but produces much faster code.
 ## Works
 
 * most structure based types should be ok (as long as the members are public)
+* types with private members can define toMsgBuf()/fromMsgBuf() methods for custom (de)serialization
 * static arrays
 * dynamic arrays
 * associative arrays
