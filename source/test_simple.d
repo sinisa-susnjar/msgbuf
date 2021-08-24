@@ -126,4 +126,58 @@ unittest {
 	}}
 }
 
+/// some more floating point tests
+unittest {
+	write("#10 ");
+
+	import std.outbuffer : OutBuffer;
+	import std.math : pow, abs;
+	import std.conv : to;
+
+	double precision = pow(10, 7);
+	auto e = 1.0e-6;
+	immutable max = long.max / precision;
+	immutable min = long.min / precision;
+	static foreach (T; EnumMembers!MsgBufferType) {{
+		auto buf = new OutBuffer;
+		auto v = 0.0;
+		auto f = 1.0;
+		size_t len = 0;
+		foreach (double l; 0..10_000_000) {
+			v = l * 3.1415926 * f;
+			if (v > 0)
+				assert(v < max);
+			else
+				assert(v > min);
+			auto val = to!long(v * precision);
+			serializeValue!(T, long)(val, buf);
+			f *= -1;
+		}
+
+		size_t processed = 0;
+		v = 0.0;
+		f = 1.0;
+		foreach (double l; 0..10_000_000) {
+			auto val = deserializeValue!(long, T)(buf.toBytes(), processed);
+			v = l * 3.1415926 * f;
+			auto d = to!double(val) / precision;
+			assert(abs(d - v) <= e, to!string(d) ~ " != " ~ to!string(v) ~ " (" ~ to!string(l) ~ ") = " ~ to!string(d-v));
+			f *= -1;
+		}
+	}}
+}
+
+/// Just some regression test for to/from LEB
+unittest {
+	write("#11 ");
+
+	immutable orig = long.min / 2;
+	import std.outbuffer;
+	auto buf = new OutBuffer;
+	size_t processed = 0;
+	serializeValue!(MsgBufferType.Var, long)(orig, buf);
+	immutable val = deserializeValue!(long, MsgBufferType.Var)(buf.toBytes, processed);
+	assert(orig == val);
+}
+
 unittest { writeln; }
