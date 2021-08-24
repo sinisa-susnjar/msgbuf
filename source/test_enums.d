@@ -43,21 +43,19 @@ unittest {
 }
 
 /// test struct with embedded string enum member
-/* not supported at the moment
-unittest {
-	write("#3 ");
-	struct TestStruct3 {
-		enum TestEnum3 {
-			val0 = "aaa",
-			val1 = "bbb"
-		}
-		TestEnum3 val = TestEnum3.val1;
-	}
-	auto t1 = TestStruct3();
-	auto msg = toMsgBuffer(t1);
-	auto t2 = fromMsgBuffer!TestStruct3(msg);
-	assert(t1 == t2);
-}
-*/
+// unittest {
+// 	write("#3 ");
+// 	struct TestStruct3 {
+// 		enum TestEnum3 {
+// 			val0 = "aaa",
+// 			val1 = "bbb"
+// 		}
+// 		TestEnum3 val = TestEnum3.val1;
+// 	}
+// 	auto t1 = TestStruct3();
+// 	auto msg = toMsgBuffer(t1);
+// 	auto t2 = fromMsgBuffer!TestStruct3(msg);
+// 	assert(t1 == t2);
+// }
 
 unittest { writeln; }
