@@ -19,7 +19,7 @@ const(T) fromLEB128(T)(const ubyte[] buf, ref size_t processed) {
 		} while (b & 0x80);
 		static if (isSigned!T)
 			if ((shift < size) && (b & 0x40) != 0)
-				result |= to!T(~0 << shift);
+				result |= to!T(~0) << shift;
 		return result;
 	} else {
 		static assert(0, T.stringof ~ " is not an integral type");
@@ -43,7 +43,7 @@ void arrayFromLEB128(T)(const ubyte[] buf, ref size_t processed, ref T val) {
 			} while (b & 0x80);
 			static if (isSigned!(typeof(val[0])))
 				if ((shift < size) && (b & 0x40) != 0)
-					result |= to!(typeof(result))(~0 << shift);
+					result |= to!(typeof(result))(~0) << shift;
 		}
 		processed = n;
 	} else {
