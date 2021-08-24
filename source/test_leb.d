@@ -169,4 +169,125 @@ unittest {
 	assert(la == lb);
 }
 
+unittest {
+	write("#6 ");
+
+	auto buf = new OutBuffer;
+	auto f = 0;
+	foreach (l; 0..10_000_000L) {
+		toLEB128!long(buf, l * f);
+		f *= -1;
+	}
+
+	size_t processed = 0;
+	f = 0;
+	foreach (l; 0..10_000_000L) {
+		assert(l * f == fromLEB128!long(buf.toBytes(), processed));
+		f *= -1;
+	}
+}
+
+unittest {
+	auto buf = new OutBuffer;
+	size_t processed = 0;
+
+	write("#7 ");
+
+	immutable ops = 30_000;
+	long[ops] la;
+
+	foreach (n; 1..ops)
+		la[n] = long.max / n;
+
+	toLEB128(buf, la);
+
+	long[ops] lb;
+
+	arrayFromLEB128(buf.toBytes(), processed, lb);
+
+	assert(la == lb);
+}
+
+unittest {
+	auto buf = new OutBuffer;
+	size_t processed = 0;
+
+	write("#8 ");
+
+	immutable ops = 30_000;
+	long[ops] la;
+
+	foreach (n; 1..ops)
+		la[n] = long.min / n;
+
+	toLEB128(buf, la);
+
+	long[ops] lb;
+
+	arrayFromLEB128(buf.toBytes(), processed, lb);
+
+	assert(la == lb);
+}
+
+unittest {
+	import std.exception, core.exception;
+
+	write("#9 ");
+
+	auto buf = new OutBuffer;
+	size_t processed = 0;
+
+	// test byte/ubyte
+	toLEB128!byte(buf, byte.max / 2);
+	toLEB128!byte(buf, byte.min / 2);
+
+	toLEB128!ubyte(buf, ubyte.max / 2);
+	toLEB128!ubyte(buf, ubyte.min);
+
+	assert(byte.max / 2 == fromLEB128!byte(buf.toBytes(), processed));
+	assert(byte.min / 2 == fromLEB128!byte(buf.toBytes(), processed));
+
+	assert(ubyte.max / 2 == fromLEB128!ubyte(buf.toBytes(), processed));
+	assert(ubyte.min == fromLEB128!ubyte(buf.toBytes(), processed));
+
+	// test short/ushort
+	toLEB128!short(buf, short.max / 2);
+	toLEB128!short(buf, short.min / 2);
+
+	toLEB128!ushort(buf, ushort.max / 2);
+	toLEB128!ushort(buf, ushort.min);
+
+	assert(short.max / 2 == fromLEB128!short(buf.toBytes(), processed));
+	assert(short.min / 2 == fromLEB128!short(buf.toBytes(), processed));
+
+	assert(ushort.max / 2 == fromLEB128!ushort(buf.toBytes(), processed));
+	assert(ushort.min == fromLEB128!ushort(buf.toBytes(), processed));
+
+	// test int/uint
+	toLEB128!int(buf, int.max / 2);
+	toLEB128!int(buf, int.min / 2);
+
+	toLEB128!uint(buf, uint.max / 2);
+	toLEB128!uint(buf, uint.min);
+
+	assert(int.max / 2 == fromLEB128!int(buf.toBytes(), processed));
+	assert(int.min / 2 == fromLEB128!int(buf.toBytes(), processed));
+
+	assert(uint.max / 2 == fromLEB128!uint(buf.toBytes(), processed));
+	assert(uint.min == fromLEB128!uint(buf.toBytes(), processed));
+
+	// test long/ulong
+	toLEB128!long(buf, long.max / 2);
+	toLEB128!long(buf, long.min / 2);
+
+	toLEB128!ulong(buf, ulong.max / 2);
+	toLEB128!ulong(buf, ulong.min);
+
+	assert(long.max / 2 == fromLEB128!long(buf.toBytes(), processed));
+	assert(long.min / 2 == fromLEB128!long(buf.toBytes(), processed));
+
+	assert(ulong.max / 2 == fromLEB128!ulong(buf.toBytes(), processed));
+	assert(ulong.min == fromLEB128!ulong(buf.toBytes(), processed));
+}
+
 unittest { writeln; }
