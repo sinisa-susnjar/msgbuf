@@ -13,7 +13,12 @@ lib/libmsgbuf.so:
 test:
 	dub test
 
+cov:
+	dub test -b unittest-cov
+
 clean:
 	dub clean
-	rm -f msgbuf
-	rm -f lib/libmsgbuf.*
+	rm -rf .dub
+	rm -f *.lst .dub*.lst
+	rm -f msgbuf-test-lib
+	rm -f libmsgbuf.a libmsgbuf.so
