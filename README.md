@@ -34,7 +34,6 @@ LDC2 takes a bit longer to compile than DMD, but produces much faster code.
 
 ## Doesn't work (yet)
 
-* endianess
 * "any" (this should be easy to simulate using a ubyte[] member for the data and maybe a type / url / uuid field)
 * adding/removing fields at arbitrary places (though adding new fields to the end is fine)
 * D classes, unions (probably won't do)
@@ -74,6 +73,7 @@ constructive criticism.
 # Examples
 
 Please refer to the `samples` directory.
+
 # History
 
-* v0.0.8 Added endianess; defaulting to little endian.
+* v0.0.8 Added endianess (defaulting to little endian).
