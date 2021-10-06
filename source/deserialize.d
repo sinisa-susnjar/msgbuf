@@ -1,7 +1,7 @@
 /// Deserialize a message buffer into a D type.
 module deserialize;
 
-import std.conv, std.traits, std.string, std.outbuffer;
+import std.conv, std.traits, std.string, std.outbuffer, std.bitmanip;
 
 import leb128, common;
 
@@ -51,9 +51,14 @@ auto fromMsgBuffer(T, MsgBufferType E = MsgBufferType.Var)(ref T val, const OutB
 pragma(inline, true)
 const(T) deserializeInt(MsgBufferType E, T)(const ubyte[] msg, ref size_t processed) {
 	static if (E == MsgBufferType.Flat) {
-		// See: https://github.com/KabukiStarship/KabukiToolkit/wiki/Fastest-Method-to-Align-Pointers
-		processed += (-processed) & (T.alignof - 1);
-		immutable n = *cast(T *)&msg[processed];
+		version (BigEndian) {
+			ubyte[T.sizeof] buf = msg[processed..processed+T.sizeof].dup;
+			immutable n = littleEndianToNative!(T, T.sizeof)(buf);
+		} else {
+			// See: https://github.com/KabukiStarship/KabukiToolkit/wiki/Fastest-Method-to-Align-Pointers
+			processed += (-processed) & (T.alignof - 1);
+			immutable n = *cast(T *)&msg[processed];
+		}
 		processed += n.sizeof;
 	} else {
 		immutable n = fromLEB128!T(msg, processed);
@@ -96,10 +101,7 @@ auto deserializeValue(T, MsgBufferType E)(ref T val, const ubyte[] msg, ref size
 	} else static if (is(T == enum)) {
 		static if (__traits(compiles, to!int(EnumMembers!T[0]))) {
 			static if (E == MsgBufferType.Flat) {
-				processed += (-processed) & (int.alignof - 1);
-				immutable n = processed;
-				processed += int.sizeof;
-				val = *cast(T *)&msg[n];
+				val = cast(T)deserializeInt!(E, int)(msg, processed);
 				return val;
 			} else {
 				val = to!T(fromLEB128!int(msg, processed));
