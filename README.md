@@ -74,3 +74,6 @@ constructive criticism.
 # Examples
 
 Please refer to the `samples` directory.
+# History
+
+* v0.0.8 Added endianess; defaulting to little endian.
