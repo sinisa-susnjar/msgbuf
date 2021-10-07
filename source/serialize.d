@@ -1,7 +1,7 @@
 /// Serialize a D type to a message buffer.
 module serialize;
 
-import std.conv, std.traits, std.outbuffer, std.string;
+import std.conv, std.traits, std.outbuffer, std.string, std.bitmanip;
 
 import leb128, common, oneof;
 
@@ -16,8 +16,12 @@ auto toMsgBuffer(MsgBufferType E = MsgBufferType.Var, T)(const ref T val) {
 pragma(inline, true)
 void serializeInt(MsgBufferType E = MsgBufferType.Var, T)(const T val, OutBuffer buf) {
 	static if (E == MsgBufferType.Flat) {
-		buf.alignSize(T.alignof);
-		buf.write(to!T(val));
+		version (BigEndian) {
+			buf.write(nativeToLittleEndian(val));
+		} else {
+			buf.alignSize(T.alignof);
+			buf.write(to!T(val));
+		}
 	} else {
 		toLEB128(buf, to!T(val));
 	}
@@ -43,12 +47,7 @@ auto serializeValue(MsgBufferType E = MsgBufferType.Var, T)(const ref T val, Out
 		buf.write(to!ubyte(val));
 	} else static if (is(T == enum)) {
 		static if (__traits(compiles, to!int(EnumMembers!T[0]))) {
-			static if (E == MsgBufferType.Flat) {
-				buf.alignSize(T.alignof);
-				buf.write(to!int(val));
-			} else {
-				toLEB128(buf, to!int(val));
-			}
+			serializeInt!(E)(to!int(val), buf);
 		} else {
 			static assert(0, "only integral enums supported for enum " ~ T.stringof);
 		}
