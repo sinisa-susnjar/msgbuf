@@ -1,4 +1,4 @@
-[![build](https://github.com/sinisa-susnjar/msgbuf/actions/workflows/d.yml/badge.svg)](https://github.com/sinisa-susnjar/msgbuf/actions) [![coverage](https://codecov.io/gh/sinisa-susnjar/msgbuf/branch/main/graph/badge.svg?token=1C9K09MWJ5)](https://codecov.io/gh/sinisa-susnjar/msgbuf)
+[![ubuntu](https://github.com/sinisa-susnjar/msgbuf/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/sinisa-susnjar/msgbuf/actions/workflows/ubuntu.yml) [![macos](https://github.com/sinisa-susnjar/msgbuf/actions/workflows/macos.yml/badge.svg)](https://github.com/sinisa-susnjar/msgbuf/actions/workflows/macos.yml) [![windows](https://github.com/sinisa-susnjar/msgbuf/actions/workflows/windows.yml/badge.svg)](https://github.com/sinisa-susnjar/msgbuf/actions/workflows/windows.yml) [![coverage](https://codecov.io/gh/sinisa-susnjar/msgbuf/branch/main/graph/badge.svg?token=1C9K09MWJ5)](https://codecov.io/gh/sinisa-susnjar/msgbuf)
 
 # D Message Buffers
 

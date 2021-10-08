@@ -1,0 +1,20 @@
+name: ubuntu
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: dlang-community/setup-dlang@1.1.1
+
+    - name: 'Build & Test'
+      run: |
+        # Build the project, without unittests
+        dub build --compiler=$DC
+        # Build and run tests
+        dub test -b unittest-cov --compiler=$DC
+        # Upload code coverage
+        bash <(curl -s https://codecov.io/bash)

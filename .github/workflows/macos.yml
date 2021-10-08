@@ -1,0 +1,27 @@
+name: macos
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ${{matrix.config.os}}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - { os: macos-10.15, dc: ldc-latest }
+          - { os: macos-11.0, dc: ldc-latest  }
+        build: [Debug, Release]
+
+    name: "${{matrix.config.os}}:${{matrix.build}}"
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: dlang-community/setup-dlang@v1.1.1
+
+    - name: 'Build'
+      run: |
+        # Build the project, without unittests
+        dub build --compiler=$DC
+        # Build and run tests
+        dub test -b unittest-cov --compiler=$DC
