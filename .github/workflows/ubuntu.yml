@@ -8,7 +8,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - uses: dlang-community/setup-dlang@1.1.1
+    - uses: dlang-community/setup-dlang@v1.1.1
 
     - name: 'Build & Test'
       run: |
