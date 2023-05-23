@@ -12,8 +12,8 @@ It only uses D's brilliant meta programming capabilities to (de)serialise data f
 
 Tested with the following compilers:
 
-* LDC2 1.26.0 (DMD v2.096.1, LLVM 11.0.1), 1.27.0 (DMD v2.097.1, LLVM 12.0.1)
-* DMD64 D Compiler v2.097.0, v2.097.2-beta.1
+* LDC2 1.26.0, 1.27.0, 1.28.0
+* DMD64 v2.097.0, v2.097.2-beta.1, v2.098
 
 LDC2 takes a bit longer to compile than DMD, but produces much faster code.
 
@@ -31,13 +31,13 @@ LDC2 takes a bit longer to compile than DMD, but produces much faster code.
 * nested structures
 * as long as new fields are appended to the end, old programs can read new message formats and vice versa
 * oneof (types in a oneof message must be unique)
+* CI/CD (built and tested on Ubuntu, macOS and Windows)
 
 ## Doesn't work (yet)
 
 * "any" (this should be easy to simulate using a ubyte[] member for the data and maybe a type / url / uuid field)
 * adding/removing fields at arbitrary places (though adding new fields to the end is fine)
 * D classes, unions (probably won't do)
-* CI/CD
 
 # Possible future improvements
 
