@@ -76,4 +76,5 @@ Please refer to the `samples` directory.
 
 # History
 
+* v0.0.9 Removed bidirectional control characters from unicode tests.
 * v0.0.8 Added endianess (defaulting to little endian).
