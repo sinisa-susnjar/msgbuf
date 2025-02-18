@@ -1,17 +1,19 @@
 {
-	"authors": [ "Sinisa Susnjar" ],
-	"copyright": "Copyright © 2022, Sinisa Susnjar",
-	"description": "Protobuf-like data (de)serialisation using D meta programming.",
-	"license": "MIT",
-	"name": "msgbuf",
-	"configurations": [
-		{
-			"name": "lib",
-			"targetType": "staticLibrary"
-		},
-		{
-			"name": "shared",
-			"targetType": "dynamicLibrary"
-		}
-	]
+  "authors": [
+    "Sinisa Susnjar"
+  ],
+  "copyright": "Copyright © 2022, Sinisa Susnjar",
+  "description": "Protobuf-like data (de)serialisation using D meta programming.",
+  "license": "MIT",
+  "name": "msgbuf",
+  "configurations": [
+    {
+      "name": "lib",
+      "targetType": "staticLibrary"
+    },
+    {
+      "name": "shared",
+      "targetType": "dynamicLibrary"
+    }
+  ]
 }

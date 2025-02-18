@@ -2,15 +2,17 @@ import std.stdio, std.traits;
 
 import msgbuf;
 
-unittest { write("tests/unicode.d "); }
+unittest {
+  write("tests/unicode.d ");
+}
 
 // UNICODE tests
 
 /// some lorem ipsum with a little bit of unicode
 unittest {
-	write("#1 ");
-	struct TestStruct {
-		string s = `Հայերեն Shqip العربية Български Català 中文简体 Hrvatski Česky Dansk Nederlands English Eesti Filipino Suomi Français ქართული Deutsch Ελληνικά עברית हिन्दी Magyar Indonesia Italiano Latviski Lietuviškai македонски Melayu Norsk Polski Português Româna Pyccкий Српски Slovenčina Slovenščina Español Svenska ไทย Türkçe Українська Tiếng Việt
+  write("#1 ");
+  struct TestStruct {
+    string s = `Հայերեն Shqip العربية Български Català 中文简体 Hrvatski Česky Dansk Nederlands English Eesti Filipino Suomi Français ქართული Deutsch Ελληνικά עברית हिन्दी Magyar Indonesia Italiano Latviski Lietuviškai македонски Melayu Norsk Polski Português Româna Pyccкий Српски Slovenčina Slovenščina Español Svenska ไทย Türkçe Українська Tiếng Việt
 Lorem Ipsum
 "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."
 "There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain..."
@@ -61,20 +63,23 @@ Section 1.10.33 of "de Finibus Bonorum et Malorum", written by Cicero in 45 BC
 help@lipsum.com
 Privacy Policy
 `;
-	}
-	auto t1 = TestStruct();
-	static foreach (T; EnumMembers!MsgBufferType) {{
-		auto msg = toMsgBuffer!(T)(t1);
-		immutable t2 = fromMsgBuffer!(TestStruct, T)(msg);
-		assert(t1 == t2);
-	}}
+  }
+
+  auto t1 = TestStruct();
+  static foreach (T; EnumMembers!MsgBufferType) {
+    {
+      auto msg = toMsgBuffer!(T)(t1);
+      immutable t2 = fromMsgBuffer!(TestStruct, T)(msg);
+      assert(t1 == t2);
+    }
+  }
 }
 
 /// more unicode tests
 unittest {
-	write("#2 ");
-	struct TestStruct {
-		string s1 = `This page contains characters from each of the Unicode character blocks.
+  write("#2 ");
+  struct TestStruct {
+    string s1 = `This page contains characters from each of the Unicode character blocks.
 
 Basic Latin
 ! " # $ % & ' ( ) * + , - . / 0 1 2 3 4 5 6 7 8 9 : ; < = > ? @ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z [ \ ] ^ _ a b c d e f g h i j k l m n o p q r s t u v w x y z { | } ~
@@ -89,7 +94,7 @@ IPA Extensions
 Spacing Modifier Letters
 ʰ ʱ ʲ ʳ ʴ ʵ ʶ ʷ ʸ ʹ ʺ ʻ ʼ ʽ ʾ ʿ ˀ ˁ ˂ ˃ ˄ ˅ ˆ ˇ ˈ ˉ ˊ ˋ ˌ ˍ ˎ ˏ ː ˑ ˒ ˓ ˔ ˕ ˖ ˗ ˘ ˙ ˚ ˛ ˜ ˝ ˞ ˟ ˠ ˡ ˢ ˣ ˤ ˥ ˦ ˧ ˨ ˩ ˪ ˫ ˬ ˭ ˮ
 Combining Diacritical Marks
-̀ ́ ̂ ̃ ̄ ̅ ̆ ̇ ̈ ̉ ̊ ̋ ̌ ̍ ̎ ̏ ̐ ̑ ̒ ̓ ̔ ̕ ̖ ̗ ̘ ̙ ̚ ̛ ̜ ̝ ̞ ̟ ̠ ̡ ̢ ̣ ̤ ̥ ̦ ̧ ̨ ̩ ̪ ̫ ̬ ̭ ̮ ̯ ̰ ̱ ̲ ̳ ̴ ̵ ̶ ̷ ̸ ̹ ̺ ̻ ̼ ̽ ̾ ̿ ̀ ́ ͂ ̓ ̈́ ͅ ͆ ͇ ͈ ͉ ͊ ͋ ͌ ͍ ͎ ͏ ͠ ͡ ͢ ͣ ͤ ͥ ͦ ͧ ͨ ͩ ͪ ͫ ͬ ͭ ͮ ͯ
+̀
 Greek and Coptic
 ʹ ͵ ͺ ; ΄ ΅ Ά · Έ Ή Ί Ό Ύ Ώ ΐ Α Β Γ Δ Ε Ζ Η Θ Ι Κ Λ Μ Ν Ξ Ο Π Ρ Σ Τ Υ Φ Χ Ψ Ω Ϊ Ϋ ά έ ή ί ΰ α β γ δ ε ζ η θ ι κ λ μ ν ξ ο π ρ ς σ τ υ φ χ ψ ω ϊ ϋ ό ύ ώ ϐ ϑ ϒ ϓ ϔ ϕ ϖ ϗ Ϙ ϙ Ϛ ϛ Ϝ ϝ Ϟ ϟ Ϡ ϡ Ϣ ϣ Ϥ ϥ Ϧ ϧ Ϩ ϩ Ϫ ϫ Ϭ ϭ Ϯ ϯ ϰ ϱ ϲ ϳ ϴ ϵ ϶
 Cyrillic
@@ -103,7 +108,7 @@ Hebrew
 Arabic
 ، ؛ ؟ ء آ أ ؤ إ ئ ا ب ة ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ـ ف ق ك ل م ن ه و ى ي ً ٌ ٍ َ ُ ِ ّ ْ ٓ ٔ ٕ ٠ ١ ٢ ٣ ٤ ٥ ٦ ٧ ٨ ٩ ٪ ٫ ٬ ٭ ٮ ٯ ٰ ٱ ٲ ٳ ٴ ٵ ٶ ٷ ٸ ٹ ٺ ٻ ټ ٽ پ ٿ ڀ ځ ڂ ڃ ڄ څ چ ڇ ڈ ډ ڊ ڋ ڌ ڍ ڎ ڏ ڐ ڑ ڒ ړ ڔ ڕ ږ ڗ ژ ڙ ښ ڛ ڜ ڝ ڞ ڟ ڠ ڡ ڢ ڣ ڤ ڥ ڦ ڧ ڨ ک ڪ ګ ڬ ...
 Syriac
-܀ ܁ ܂ ܃ ܄ ܅ ܆ ܇ ܈ ܉ ܊ ܋ ܌ ܍  ܐ ܑ ܒ ܓ ܔ ܕ ܖ ܗ ܘ ܙ ܚ ܛ ܜ ܝ ܞ ܟ ܠ ܡ ܢ ܣ ܤ ܥ ܦ ܧ ܨ ܩ ܪ ܫ ܬ ܰ ܱ ܲ ܳ ܴ ܵ ܶ ܷ ܸ ܹ ܺ ܻ ܼ ܽ ܾ ܿ ݀ ݁ ݂ ݃ ݄ ݅ ݆ ݇ ݈ ݉ ݊
+܀ ܁ ܂ ܃ ܄ ܅ ܆ ܇ ܈ ܉ ܊ ܋ ܌ ܍  ܐ ܑ ܒ ܓ ܔ ܕ ܖ ܗ ܘ ܙ ܚ ܛ ܜ ܝ ܞ ܟ ܠ ܡ ܢ ܣ ܤ ܥ ܦ ܧ ܨ ܩ ܪ ܫ ܬ
 Thaana
 ހ ށ ނ ރ ބ ޅ ކ އ ވ މ ފ ދ ތ ލ ގ ޏ ސ ޑ ޒ ޓ ޔ ޕ ޖ ޗ ޘ ޙ ޚ ޛ ޜ ޝ ޞ ޟ ޠ ޡ ޢ ޣ ޤ ޥ ަ ާ ި ީ ު ޫ ެ ޭ ޮ ޯ ް ޱ
 Devanagari
@@ -133,7 +138,7 @@ Lao
 Tibetan
 ༀ ༁ ༂ ༃ ༄ ༅ ༆ ༇ ༈ ༉ ༊ ་ ༌ ། ༎ ༏ ༐ ༑ ༒ ༓ ༔ ༕ ༖ ༗ ༘ ༙ ༚ ༛ ༜ ༝ ༞ ༟ ༠ ༡ ༢ ༣ ༤ ༥ ༦ ༧ ༨ ༩ ༪ ༫ ༬ ༭ ༮ ༯ ༰ ༱ ༲ ༳ ༴ ༵ ༶ ༷ ༸ ༹ ༺ ༻ ༼ ༽ ༾ ༿ ཀ ཁ ག གྷ ང ཅ ཆ ཇ ཉ ཊ ཋ ཌ ཌྷ ཎ ཏ ཐ ད དྷ ན པ ཕ བ བྷ མ ཙ ཚ ཛ ཛྷ ཝ ཞ ཟ འ ཡ ར ལ ཤ ཥ ས ཧ ཨ ཀྵ ཪ ཱ ི ཱི ུ ཱུ ྲྀ ཷ ླྀ ཹ ེ ཻ ོ ཽ ཾ ཿ ྀ ཱྀ ྂ ྃ ྄ ྅ ྆ ...
 Myanmar
-က ခ ဂ ဃ င စ ဆ ဇ ဈ ဉ ည ဋ ဌ ဍ ဎ ဏ တ ထ ဒ ဓ န ပ ဖ ဗ ဘ မ ယ ရ လ ဝ သ ဟ ဠ အ ဣ ဤ ဥ ဦ ဧ ဩ ဪ ာ ိ ီ ု ူ ေ ဲ ံ ့ း ္ ၀ ၁ ၂ ၃ ၄ ၅ ၆ ၇ ၈ ၉ ၊ ။ ၌ ၍ ၎ ၏ ၐ ၑ ၒ ၓ ၔ ၕ ၖ ၗ ၘ ၙ
+က ခ ဂ ဃ င စ ဆ ဇ ဈ ဉ ည ဋ ဌ ဍ ဎ ဏ တ ထ ဒ ဓ န ပ ဖ ဗ ဘ မ ယ ရ လ ဝ သ ဟ ဠ အ ဣ ဤ ဥ ဦ ဧ ဩ ဪ ာ ိ ီ ု ူ ေ ဲ ံ ့ း ္ ၀ ၁ ၂ ၃ ၄ ၅ ၆ ၇ ၈ ၉ ၊ ။ ၌ ၍ ၎ ၏ ၐ ၑ ၒ ၓ ၔ ၕ
 Georgian
 Ⴀ Ⴁ Ⴂ Ⴃ Ⴄ Ⴅ Ⴆ Ⴇ Ⴈ Ⴉ Ⴊ Ⴋ Ⴌ Ⴍ Ⴎ Ⴏ Ⴐ Ⴑ Ⴒ Ⴓ Ⴔ Ⴕ Ⴖ Ⴗ Ⴘ Ⴙ Ⴚ Ⴛ Ⴜ Ⴝ Ⴞ Ⴟ Ⴠ Ⴡ Ⴢ Ⴣ Ⴤ Ⴥ ა ბ გ დ ე ვ ზ თ ი კ ლ მ ნ ო პ ჟ რ ს ტ უ ფ ქ ღ ყ შ ჩ ც ძ წ ჭ ხ ჯ ჰ ჱ ჲ ჳ ჴ ჵ ჶ ჷ ჸ ჻
 Hangul Jamo
@@ -149,13 +154,13 @@ Ogham
 Runic
 ᚠ ᚡ ᚢ ᚣ ᚤ ᚥ ᚦ ᚧ ᚨ ᚩ ᚪ ᚫ ᚬ ᚭ ᚮ ᚯ ᚰ ᚱ ᚲ ᚳ ᚴ ᚵ ᚶ ᚷ ᚸ ᚹ ᚺ ᚻ ᚼ ᚽ ᚾ ᚿ ᛀ ᛁ ᛂ ᛃ ᛄ ᛅ ᛆ ᛇ ᛈ ᛉ ᛊ ᛋ ᛌ ᛍ ᛎ ᛏ ᛐ ᛑ ᛒ ᛓ ᛔ ᛕ ᛖ ᛗ ᛘ ᛙ ᛚ ᛛ ᛜ ᛝ ᛞ ᛟ ᛠ ᛡ ᛢ ᛣ ᛤ ᛥ ᛦ ᛧ ᛨ ᛩ ᛪ ᛫ ᛬ ᛭ ᛮ ᛯ ᛰ
 Tagalog
-ᜀ ᜁ ᜂ ᜃ ᜄ ᜅ ᜆ ᜇ ᜈ ᜉ ᜊ ᜋ ᜌ ᜎ ᜏ ᜐ ᜑ ᜒ ᜓ ᜔
+ᜀ ᜁ ᜂ ᜃ ᜄ ᜅ ᜆ ᜇ ᜈ ᜉ ᜊ ᜋ ᜌ ᜎ ᜏ ᜐ ᜑ
 Hanunoo
 ᜠ ᜡ ᜢ ᜣ ᜤ ᜥ ᜦ ᜧ ᜨ ᜩ ᜪ ᜫ ᜬ ᜭ ᜮ ᜯ ᜰ ᜱ ᜲ ᜳ ᜴ ᜵ ᜶
 Buhid
-ᝀ ᝁ ᝂ ᝃ ᝄ ᝅ ᝆ ᝇ ᝈ ᝉ ᝊ ᝋ ᝌ ᝍ ᝎ ᝏ ᝐ ᝑ ᝒ ᝓ
+ᝀ ᝁ ᝂ ᝃ ᝄ ᝅ ᝆ ᝇ ᝈ ᝉ ᝊ ᝋ ᝌ ᝍ ᝎ ᝏ ᝐ ᝑ
 Tagbanwa
-ᝠ ᝡ ᝢ ᝣ ᝤ ᝥ ᝦ ᝧ ᝨ ᝩ ᝪ ᝫ ᝬ ᝮ ᝯ ᝰ ᝲ ᝳ
+ᝠ ᝡ ᝢ ᝣ ᝤ ᝥ ᝦ ᝧ ᝨ ᝩ ᝪ ᝫ ᝬ ᝮ ᝯ ᝰ
 Khmer
 ក ខ គ ឃ ង ច ឆ ជ ឈ ញ ដ ឋ ឌ ឍ ណ ត ថ ទ ធ ន ប ផ ព ភ ម យ រ ល វ ឝ ឞ ស ហ ឡ អ ឣ ឤ ឥ ឦ ឧ ឨ ឩ ឪ ឫ ឬ ឭ ឮ ឯ ឰ ឱ ឲ ឳ ឴ ឵ ា ិ ី ឹ ឺ ុ ូ ួ ើ ឿ ៀ េ ែ ៃ ោ ៅ ំ ះ ៈ ៉ ៊ ់ ៌ ៍ ៎ ៏ ័ ៑ ្ ៓ ។ ៕ ៖ ៗ ៘ ៙ ៚ ៛ ៜ ០ ១ ២ ៣ ៤ ៥ ៦ ៧ ៨ ៩
 Mongolian
@@ -165,13 +170,15 @@ Latin Extended Additional
 Greek Extended
 ἀ ἁ ἂ ἃ ἄ ἅ ἆ ἇ Ἀ Ἁ Ἂ Ἃ Ἄ Ἅ Ἆ Ἇ ἐ ἑ ἒ ἓ ἔ ἕ Ἐ Ἑ Ἒ Ἓ Ἔ Ἕ ἠ ἡ ἢ ἣ ἤ ἥ ἦ ἧ Ἠ Ἡ Ἢ Ἣ Ἤ Ἥ Ἦ Ἧ ἰ ἱ ἲ ἳ ἴ ἵ ἶ ἷ Ἰ Ἱ Ἲ Ἳ Ἴ Ἵ Ἶ Ἷ ὀ ὁ ὂ ὃ ὄ ὅ Ὀ Ὁ Ὂ Ὃ Ὄ Ὅ ὐ ὑ ὒ ὓ ὔ ὕ ὖ ὗ Ὑ Ὓ Ὕ Ὗ ὠ ὡ ὢ ὣ ὤ ὥ ὦ ὧ Ὠ Ὡ Ὢ Ὣ Ὤ Ὥ Ὦ Ὧ ὰ ά ὲ έ ὴ ή ὶ ί ὸ ό ὺ ύ ὼ ώ ᾀ ᾁ ᾂ ᾃ ᾄ ᾅ ᾆ ᾇ ᾈ ᾉ ᾊ ᾋ ᾌ ᾍ ...
 General Punctuation
-                      ‐ ‑ ‒ – — ― ‖ ‗ ‘ ’ ‚ ‛ “ ” „ ‟ † ‡ • ‣ ․ ‥ … ‧     ‰ ‱ ′ ″ ‴ ‵ ‶ ‷ ‸ ‹ › ※ ‼ ‽ ‾ ‿ ⁀ ⁁ ⁂ ⁃ ⁄ ⁅ ⁆ ⁇ ⁈ ⁉ ⁊ ⁋ ⁌ ⁍ ⁎ ⁏ ⁐ ⁑ ⁒ ⁗   ⁠ ⁡ ⁢ ⁣ ⁪ ⁫ ⁬ ⁭ ⁮ ⁯
+                      ‐ ‑ ‒ – — ― ‖ ‗ ‘ ’ ‚ ‛ “ ” „ ‟ † ‡ • ‣ ․ ‥ … ‧
+
+ ‰ ‱ ′ ″ ‴ ‵ ‶ ‷ ‸ ‹ › ※ ‼ ‽ ‾ ‿ ⁀ ⁁ ⁂ ⁃ ⁄ ⁅ ⁆ ⁇ ⁈ ⁉ ⁊ ⁋ ⁌ ⁍ ⁎ ⁏ ⁐ ⁑ ⁒ ⁗   ⁠ ⁡ ⁢ ⁣ ⁪ ⁫ ⁬ ⁭ ⁮ ⁯
 Superscripts and Subscripts
 ⁰ ⁱ ⁴ ⁵ ⁶ ⁷ ⁸ ⁹ ⁺ ⁻ ⁼ ⁽ ⁾ ⁿ ₀ ₁ ₂ ₃ ₄ ₅ ₆ ₇ ₈ ₉ ₊ ₋ ₌ ₍ ₎
 Currency Symbols
 ₠ ₡ ₢ ₣ ₤ ₥ ₦ ₧ ₨ ₩ ₪ ₫ € ₭ ₮ ₯ ₰ ₱
 Combining Diacritical Marks for Symbols
-⃐ ⃑ ⃒ ⃓ ⃔ ⃕ ⃖ ⃗ ⃘ ⃙ ⃚ ⃛ ⃜ ⃝ ⃞ ⃟ ⃠ ⃡ ⃢ ⃣ ⃤ ⃥ ⃦ ⃧ ⃨ ⃩ ⃪
+⃐
 Letterlike Symbols
 ℀ ℁ ℂ ℃ ℄ ℅ ℆ ℇ ℈ ℉ ℊ ℋ ℌ ℍ ℎ ℏ ℐ ℑ ℒ ℓ ℔ ℕ № ℗ ℘ ℙ ℚ ℛ ℜ ℝ ℞ ℟ ℠ ℡ ™ ℣ ℤ ℥ Ω ℧ ℨ ℩ K Å ℬ ℭ ℮ ℯ ℰ ℱ Ⅎ ℳ ℴ ℵ ℶ ℷ ℸ ℹ ℺ ℽ ℾ ℿ ⅀ ⅁ ⅂ ⅃ ⅄ ⅅ ⅆ ⅇ ⅈ ⅉ ⅊ ⅋
 Number Forms
@@ -255,9 +262,9 @@ Alphabetic Presentation Forms
 Arabic Presentation Forms-A
 ﭐ ﭑ ﭒ ﭓ ﭔ ﭕ ﭖ ﭗ ﭘ ﭙ ﭚ ﭛ ﭜ ﭝ ﭞ ﭟ ﭠ ﭡ ﭢ ﭣ ﭤ ﭥ ﭦ ﭧ ﭨ ﭩ ﭪ ﭫ ﭬ ﭭ ﭮ ﭯ ﭰ ﭱ ﭲ ﭳ ﭴ ﭵ ﭶ ﭷ ﭸ ﭹ ﭺ ﭻ ﭼ ﭽ ﭾ ﭿ ﮀ ﮁ ﮂ ﮃ ﮄ ﮅ ﮆ ﮇ ﮈ ﮉ ﮊ ﮋ ﮌ ﮍ ﮎ ﮏ ﮐ ﮑ ﮒ ﮓ ﮔ ﮕ ﮖ ﮗ ﮘ ﮙ ﮚ ﮛ ﮜ ﮝ ﮞ ﮟ ﮠ ﮡ ﮢ ﮣ ﮤ ﮥ ﮦ ﮧ ﮨ ﮩ ﮪ ﮫ ﮬ ﮭ ﮮ ﮯ ﮰ ﮱ ﯓ ﯔ ﯕ ﯖ ﯗ ﯘ ﯙ ﯚ ﯛ ﯜ ﯝ ﯞ ﯟ ﯠ ﯡ ﯢ ﯣ ﯤ ﯥ ﯦ ﯧ ﯨ ﯩ ﯪ ﯫ ﯬ ﯭ ﯮ ﯯ ﯰ ...
 Variation Selectors
-︀ ︁ ︂ ︃ ︄ ︅ ︆ ︇ ︈ ︉ ︊ ︋ ︌ ︍ ︎ ️
+︀
 Combining Half Marks
-︠ ︡ ︢ ︣
+︠
 CJK Compatibility Forms
 ︰ ︱ ︲ ︳ ︴ ︵ ︶ ︷ ︸ ︹ ︺ ︻ ︼ ︽ ︾ ︿ ﹀ ﹁ ﹂ ﹃ ﹄ ﹅ ﹆ ﹉ ﹊ ﹋ ﹌ ﹍ ﹎ ﹏
 Small Form Variants
@@ -285,19 +292,24 @@ CJK Unified Ideographs Extension B
 CJK Compatibility Ideographs Supplement
 丽 丸 乁 𠄢 你 侮 侻 倂 偺 備 僧 像 㒞 𠘺 免 兔 兤 具 𠔜 㒹 內 再 𠕋 冗 冤 仌 冬 况 𩇟 凵 刃 㓟 刻 剆 割 剷 㔕 勇 勉 勤 勺 包 匆 北 卉 卑 博 即 卽 卿 卿 卿 𠨬 灰 及 叟 𠭣 叫 叱 吆 咞 吸 呈 周 咢 哶 唐 啓 啣 善 善 喙 喫 喳 嗂 圖 嘆 圗 噑 噴 切 壮 城 埴 堍 型 堲 報 墬 𡓤 売 壷 夆 多 夢 奢 𡚨 𡛪 姬 娛 娧 姘 婦 㛮 㛼 嬈 嬾 嬾 𡧈 寃 寘 寧 寳 𡬘 寿 将 当 尢 㞁 屠 屮 峀 岍 𡷤 嵃 𡷦 嵮 嵫 ...
 Tags
-󠀁 󠀠 󠀡 󠀢 󠀣 󠀤 󠀥 󠀦 󠀧 󠀨 󠀩 󠀪 󠀫 󠀬 󠀭 󠀮 󠀯 󠀰 󠀱 󠀲 󠀳 󠀴 󠀵 󠀶 󠀷 󠀸 󠀹 󠀺 󠀻 󠀼 󠀽 󠀾 󠀿 󠁀 󠁁 󠁂 󠁃 󠁄 󠁅 󠁆 󠁇 󠁈 󠁉 󠁊 󠁋 󠁌 󠁍 󠁎 󠁏 󠁐 󠁑 󠁒 󠁓 󠁔 󠁕 󠁖 󠁗 󠁘 󠁙 󠁚 󠁛 󠁜 󠁝 󠁞 󠁟 󠁠 󠁡 󠁢 󠁣 󠁤 󠁥 󠁦 󠁧 󠁨 󠁩 󠁪 󠁫 󠁬 󠁭 󠁮 󠁯 󠁰 󠁱 󠁲 󠁳 󠁴 󠁵 󠁶 󠁷 󠁸 󠁹 󠁺 󠁻 󠁼 󠁽 󠁾 󠁿
+󠀁
 Supplementary Private Use Area-A
 󰀀 󰀁 󰀂 󰀃 󰀄 󰀅 󰀆 󰀇 󰀈 󰀉 󰀊 󰀋 󰀌 󰀍 󰀎 󰀏 󰀐 󰀑 󰀒 󰀓 󰀔 󰀕 󰀖 󰀗 󰀘 󰀙 󰀚 󰀛 󰀜 󰀝 󰀞 󰀟 󰀠 󰀡 󰀢 󰀣 󰀤 󰀥 󰀦 󰀧 󰀨 󰀩 󰀪 󰀫 󰀬 󰀭 󰀮 󰀯 󰀰 󰀱 󰀲 󰀳 󰀴 󰀵 󰀶 󰀷 󰀸 󰀹 󰀺 󰀻 󰀼 󰀽 󰀾 󰀿 󰁀 󰁁 󰁂 󰁃 󰁄 󰁅 󰁆 󰁇 󰁈 󰁉 󰁊 󰁋 󰁌 󰁍 󰁎 󰁏 󰁐 󰁑 󰁒 󰁓 󰁔 󰁕 󰁖 󰁗 󰁘 󰁙 󰁚 󰁛 󰁜 󰁝 󰁞 󰁟 󰁠 󰁡 󰁢 󰁣 󰁤 󰁥 󰁦 󰁧 󰁨 󰁩 󰁪 󰁫 󰁬 󰁭 󰁮 󰁯 󰁰 󰁱 󰁲 󰁳 󰁴 󰁵 󰁶 󰁷 󰁸 󰁹 󰁺 󰁻 󰁼 󰁽 󰁾 󰁿 ...
 Supplementary Private Use Area-B
 􀀀 􀀁 􀀂 􀀃 􀀄 􀀅 􀀆 􀀇 􀀈 􀀉 􀀊 􀀋 􀀌 􀀍 􀀎 􀀏 􀀐 􀀑 􀀒 􀀓 􀀔 􀀕 􀀖 􀀗 􀀘 􀀙 􀀚 􀀛 􀀜 􀀝 􀀞 􀀟 􀀠 􀀡 􀀢 􀀣 􀀤 􀀥 􀀦 􀀧 􀀨 􀀩 􀀪 􀀫 􀀬 􀀭 􀀮 􀀯 􀀰 􀀱 􀀲 􀀳 􀀴 􀀵 􀀶 􀀷 􀀸 􀀹 􀀺 􀀻 􀀼 􀀽 􀀾 􀀿 􀁀 􀁁 􀁂 􀁃 􀁄 􀁅 􀁆 􀁇 􀁈 􀁉 􀁊 􀁋 􀁌 􀁍 􀁎 􀁏 􀁐 􀁑 􀁒 􀁓 􀁔 􀁕 􀁖 􀁗 􀁘 􀁙 􀁚 􀁛 􀁜 􀁝 􀁞 􀁟 􀁠 􀁡 􀁢 􀁣 􀁤 􀁥 􀁦 􀁧 􀁨 􀁩 􀁪 􀁫 􀁬 􀁭 􀁮 􀁯 􀁰 􀁱 􀁲 􀁳 􀁴 􀁵 􀁶 􀁷 􀁸 􀁹 􀁺 􀁻 􀁼 􀁽 􀁾 􀁿 ...
 		`;
-	}
-	auto t1 = TestStruct();
-	static foreach (T; EnumMembers!MsgBufferType) {{
-		auto msg = toMsgBuffer!(T)(t1);
-		immutable t2 = fromMsgBuffer!(TestStruct, T)(msg);
-		assert(t1 == t2);
-	}}
+  }
+
+  auto t1 = TestStruct();
+  static foreach (T; EnumMembers!MsgBufferType) {
+    {
+      auto msg = toMsgBuffer!(T)(t1);
+      immutable t2 = fromMsgBuffer!(TestStruct, T)(msg);
+      assert(t1 == t2);
+    }
+  }
 }
 
-unittest { writeln; }
+unittest {
+  writeln;
+}
