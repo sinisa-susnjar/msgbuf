@@ -75,7 +75,7 @@ auto serializeValue(MsgBufferType E = MsgBufferType.Var, T)(const ref T val, Out
         buf.write(cast(ubyte[]) val);
       }
     } else {
-      static foreach (k; val)
+      foreach (k; val)
         serializeValue!(E, typeof(k))(k, buf);
     }
   } else static if (isAssociativeArray!(T)) {

@@ -129,7 +129,7 @@ auto deserializeValue(T, MsgBufferType E)(ref T val, const ubyte[] msg, ref size
       return val;
     }
   } else static if (isArray!(T)) {
-    auto n = deserializeInt!(E, uint)(msg, processed);
+    immutable n = deserializeInt!(E, uint)(msg, processed);
     static if (isDynamicArray!(T))
       val = new typeof(val[0])[n];
     static if (isScalarType!(typeof(val[0])) || isFloatingPoint!(typeof(val[0]))) {
@@ -146,7 +146,7 @@ auto deserializeValue(T, MsgBufferType E)(ref T val, const ubyte[] msg, ref size
         processed += val.length * typeof(val[0]).sizeof;
       }
     } else {
-      static foreach (i; 0 .. n)
+      foreach (i; 0 .. n)
         val[i] = deserializeValue!(typeof(val[i]), E)(msg, processed);
     }
     return val;
