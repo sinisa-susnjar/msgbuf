@@ -1,17 +1,26 @@
 /// Serialize a D type to a message buffer.
 module serialize;
 
-import std.conv, std.traits, std.outbuffer, std.string, std.bitmanip;
+import std.conv, std.traits, std.outbuffer, std.string, std.bitmanip, std.zlib;
 
 import leb128, common, oneof;
 
 /// Serialize top-level, either array, associative array or struct.
 /// For aggregate types like structs, serialize each member.
-/// Return: serialized data as `OutBuffer`
+/// Return: serialized data as `ubyte[]`
 auto toMsgBuffer(MsgBufferType E = MsgBufferType.Var, T)(const ref T val)
 {
-  return toMsgBuffer!(E, T)(val, new OutBuffer);
+  return toMsgBuffer!(E, T)(val, new OutBuffer).toBytes;
 } // toMsgBuffer()
+
+/// Serialize top-level, either array, associative array or struct.
+/// For aggregate types like structs, serialize each member.
+/// Return: serialized and compressed data using zlib as `ubyte[]`
+auto toZlibMsgBuffer(MsgBufferType E = MsgBufferType.Var, T)(const ref T val, int compressLevel = 0)
+{
+  auto buf = toMsgBuffer!(E, T)(val, new OutBuffer);
+  return compress(buf.toBytes, compressLevel);
+} // toZlibMsgBuffer()
 
 /// Serialise an integer to `buf`.
 pragma(inline, true) void serializeInt(MsgBufferType E = MsgBufferType.Var, T)(
@@ -98,7 +107,7 @@ auto serializeValue(MsgBufferType E = MsgBufferType.Var, T)(const ref T val, Out
         enum OneofMemberName = __traits(identifier, s);
         static if (OneofMemberName.startsWith("___data_field")) {
           if (has!(OneofMemberType)(val)) {
-            immutable oneOfValue = get!(OneofMemberType)(val);
+            auto oneOfValue = get!(OneofMemberType)(val);
             serializeInt!(E)(to!ubyte(idx + 1), buf);
             serializeValue!(E, OneofMemberType)(oneOfValue, buf);
             hasValue = true;

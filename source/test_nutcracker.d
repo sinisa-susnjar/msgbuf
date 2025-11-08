@@ -225,9 +225,9 @@ unittest {
       foreach (i; 0 .. 100) {
         // serialise original
         auto msg = toMsgBuffer!(T)(t1);
-        size_t[1] length = msg.toBytes.length;
+        size_t[1] length = msg.length;
         old_data.rawWrite(length);
-        old_data.rawWrite(msg.toBytes);
+        old_data.rawWrite(msg);
       }
       old_data.close();
 
@@ -293,9 +293,9 @@ unittest {
       foreach (i; 0 .. 100) {
         // serialise new format
         auto msg = toMsgBuffer!(T)(t1);
-        size_t[1] length = msg.toBytes.length;
+        size_t[1] length = msg.length;
         new_data.rawWrite(length);
-        new_data.rawWrite(msg.toBytes);
+        new_data.rawWrite(msg);
       }
       new_data.close();
 

@@ -1,7 +1,7 @@
 /// Deserialize a message buffer into a D type.
 module deserialize;
 
-import std.conv, std.traits, std.string, std.outbuffer, std.bitmanip;
+import std.conv, std.traits, std.string, std.outbuffer, std.bitmanip, std.zlib;
 
 import leb128, common;
 
@@ -16,6 +16,18 @@ auto fromMsgBuffer(T, MsgBufferType E = MsgBufferType.Var)(const ubyte[] msg)
   T val;
   return fromMsgBuffer!(T, E)(val, msg, processed);
 } // fromMsgBuffer()
+
+/// Deserialize top-level, either array, associative array or struct from
+/// a given ubyte array that was previously compressed using zlib.
+/// For aggregate types like structs, deserialize each member.
+/// Params: msg = serialized data ubyte array, zlib compressed
+/// Return: Variable of type `T`.
+auto fromZlibMsgBuffer(T, MsgBufferType E = MsgBufferType.Var)(const ubyte[] msg)
+{
+  size_t processed = 0;
+  T val;
+  return fromMsgBuffer!(T, E)(val, cast(ubyte[]) uncompress(msg), processed);
+} // fromZlibMsgBuffer()
 
 /// Deserialize top-level, either array, associative array or struct from
 /// a given ubyte array.
