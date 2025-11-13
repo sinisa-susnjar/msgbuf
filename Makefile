@@ -10,6 +10,9 @@ shared: lib/libmsgbuf.so
 lib/libmsgbuf.so:
 	dub build -b release-nobounds -c shared
 
+release-debug:
+	dub build -a x86_64-windows-msvc -b release-debug -C dll64 --force
+
 test:
 	dub test
 
