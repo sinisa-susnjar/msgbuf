@@ -59,7 +59,7 @@ void main(string[] args)
   msg.msg = sub1();
 
   auto buf = toMsgBuffer!(Type)(msg);
-  writefln("serialized size: %s (%s)", buf.toBytes.length, Type.stringof);
+  writefln("serialized size: %s (%s)", buf.length, Type.stringof);
   auto msg2 = fromMsgBuffer!(MsgBufTestMsg, Type)(buf);
   assert(msg == msg2);
 
@@ -67,7 +67,7 @@ void main(string[] args)
   immutable sw = StopWatch(AutoStart.yes);
   foreach (n; 0 .. rounds) {
     auto data = toMsgBuffer!(Type)(msg);
-    sz += data.toBytes.length;
+    sz += data.length;
     fromMsgBuffer!(MsgBufTestMsg, Type)(data);
   }
   auto ms = sw.peek.total!"msecs";
