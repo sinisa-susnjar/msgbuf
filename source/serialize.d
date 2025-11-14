@@ -84,6 +84,7 @@ auto serializeValue(MsgBufferType E = MsgBufferType.Var, T)(const ref T val, Out
         buf.write(cast(ubyte[]) val);
       }
     } else {
+      // TODO: try to make this `static` for most cases
       foreach (k; val)
         serializeValue!(E, typeof(k))(k, buf);
     }

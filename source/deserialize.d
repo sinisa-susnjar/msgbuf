@@ -158,6 +158,7 @@ auto deserializeValue(T, MsgBufferType E)(ref T val, const ubyte[] msg, ref size
         processed += val.length * typeof(val[0]).sizeof;
       }
     } else {
+      // TODO: try to make this `static` for most cases
       foreach (i; 0 .. n)
         val[i] = deserializeValue!(typeof(val[i]), E)(msg, processed);
     }
